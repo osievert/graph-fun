@@ -1,29 +1,66 @@
 #include <string>
+#include <utility>
 
 #include "Graph.h"
 
-using namespace container;
+template <typename V, typename E>
+std::list<typename Graph<V,E>::Vertex> search(const Graph<V,E>& g)
+{
+    std::list<typename Graph<V,E>::Vertex> result;
+
+    while (result.size() != g.vertices.size())
+    {
+        for (const auto& vertex : g.vertices)
+        {
+            // check if the vertices pointed to by 'vertex' is already output list
+            auto outEdges = g.edgesOut(vertex);
+            auto addToResult = true;
+
+            for (const auto& edge : outEdges)
+            {
+                // if the vertex pointed to by edge->end is not in our result, we can't add this vertex
+                auto found = std::find(result.begin(), result.end(), edge->end);
+
+                if (found == result.end())
+                    addToResult = false;
+            }
+
+            if (addToResult)
+            {
+                result.push_back(vertex);
+            }
+        }
+    }
+
+    return result;
+}
 
 int main()
 {
-    auto i = 12;
-    printf("%d\n", i);
+    // build the graph we drew on paper
+    Graph<std::string,int> g;
+    auto vR = g.addVertex("root");
+    auto v1 = g.addVertex("1");
+    auto v2 = g.addVertex("2");
+    auto v3 = g.addVertex("3");
+    auto v4 = g.addVertex("4");
+    auto v5 = g.addVertex("5");
 
-    Graph<int,int> g;
-    auto v1 = g.addVertex(7);
-    auto v2 = g.addVertex(2);
-    auto v3 = g.addVertex(3);
-    printf("%d\n", g.vertices.front()->data);
+    g.addEdge(vR, v1, 1);
+    g.addEdge(vR, v2, 2);
+    g.addEdge(v1, v3, 3);
+    g.addEdge(v1, v4, 4);
+    g.addEdge(v2, v3, 5);
+    g.addEdge(v2, v5, 6);
 
-    g.addEdge(v1, v2, 100);    // add an edge connecting two vertices
+    printf("first vertex: %s\n", g.vertices.front()->data.c_str());
 
-    auto e = g.addEdge(101);   // add an edge then connect it to vertices later
-    e->start = v2;
-    e->end = v3;
+    auto vertices = search(g);
 
-    v1->data = 1;              // update vertex data
+    for (const auto& vertex : vertices)
+    {
+        printf("%s\n",vertex->data.c_str());
+    }
 
-    printf("%d\n", g.vertices.front()->data);
     return 0;
 }
-

@@ -12,8 +12,6 @@
 #include <string>
 #include <vector>
 
-namespace container {
-
 // A graph data structure.
 //
 // Every graph data structure is study in compromise. This implementation:
@@ -88,9 +86,9 @@ struct Graph
     Edge   addEdge(Vertex start, Vertex end, E edgeData);
     void   removeEdge(Edge edge);
 
-    std::vector<Edge> edgesIn(const Vertex vertex);
-    std::vector<Edge> edgesOut(const Vertex vertex);
-    std::vector<Edge> edgesAll(const Vertex vertex);
+    std::vector<Edge> edgesIn(const Vertex vertex) const;
+    std::vector<Edge> edgesOut(const Vertex vertex) const;
+    std::vector<Edge> edgesAll(const Vertex vertex) const;
 
     std::string string() const;
     bool empty() const;
@@ -138,7 +136,7 @@ void Graph<V,E>::removeEdge(Edge edge)
 }
 
 template <typename V, typename E>
-auto Graph<V,E>::edgesIn(const Vertex vertex) -> std::vector<Edge>
+auto Graph<V,E>::edgesIn(const Vertex vertex) const -> std::vector<Edge>
 {
     std::vector<Edge> output;
     std::copy_if(edges.begin(), edges.end(), std::back_inserter(output), [vertex](const Edge& edge) {
@@ -148,7 +146,7 @@ auto Graph<V,E>::edgesIn(const Vertex vertex) -> std::vector<Edge>
 }
 
 template <typename V, typename E>
-auto Graph<V,E>::edgesOut(const Vertex vertex) -> std::vector<Edge>
+auto Graph<V,E>::edgesOut(const Vertex vertex) const -> std::vector<Edge>
 {
     std::vector<Edge> output;
     std::copy_if(edges.begin(), edges.end(), std::back_inserter(output), [vertex](const Edge& edge) {
@@ -158,7 +156,7 @@ auto Graph<V,E>::edgesOut(const Vertex vertex) -> std::vector<Edge>
 }
 
 template <typename V, typename E>
-auto Graph<V,E>::edgesAll(const Vertex vertex) -> std::vector<Edge>
+auto Graph<V,E>::edgesAll(const Vertex vertex) const -> std::vector<Edge>
 {
     std::vector<Edge> output;
     std::copy_if(edges.begin(), edges.end(), std::back_inserter(output), [vertex](const Edge& edge) {
@@ -178,6 +176,3 @@ std::string Graph<V,E>::string() const
 {
     return {}; //common::format("vertices:{}\nedges:{}", vertices, edges);
 }
-
-
-} // namespace

@@ -16,6 +16,12 @@ std::list<typename Graph<V,E>::Vertex> search(const Graph<V,E>& g)
             auto outEdges = g.edgesOut(vertex);
             auto addToResult = true;
 
+            // skip if this vertex has already been added to the output list
+            if (std::find(result.begin(), result.end(), vertex) != result.end())
+            {
+                continue;
+            }
+
             for (const auto& edge : outEdges)
             {
                 // if the vertex pointed to by edge->end is not in our result, we can't add this vertex
